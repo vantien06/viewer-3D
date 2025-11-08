@@ -26,7 +26,7 @@ class ViewerPage extends StatefulWidget {
 }
 
 class _ViewerPageState extends State<ViewerPage> {
-  final Flutter3DController _controller = Flutter3DController();
+  final Flutter3DController _controller = Flutter3DController();  
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _ViewerPageState extends State<ViewerPage> {
           controller: _controller,
           // Dùng model GLB mẫu có sẵn online
           // src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
-          src: 'assets/3d/DamagedHelmet.glb',
+          src: 'assets/3d/sub.glb',
           enableTouch: true,
         ),
       ),
