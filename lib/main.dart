@@ -259,7 +259,7 @@ class _ViewerPageState extends State<ViewerPage> {
               if (isRotating) {
                 controller.pauseRotation();
               } else {
-                controller.startRotation();
+                controller.startRotation(rotationSpeed: 90);
               }
               isRotating = !isRotating;
             }),
