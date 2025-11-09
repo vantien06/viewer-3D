@@ -41,9 +41,30 @@ class ViewerPage extends StatefulWidget {
 class _ViewerPageState extends State<ViewerPage> {
   final Flutter3DController controller = Flutter3DController();
 
-  bool showInfo = true;
+  String modelUrl =
+      'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+  String modelName = 'Astronaut.glb';
 
+  final TextEditingController urlController = TextEditingController();
+
+  bool isValidUrl(String url) {
+    final low = url.toLowerCase();
+    return ((low.startsWith('http://') || low.startsWith('https://')) &&
+        (low.endsWith('glb')));
+  }
+
+  String extractModelName(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.pathSegments.isNotEmpty ? uri.pathSegments.last : url;
+    } catch (e) {
+      return url;
+    }
+  }
+
+  bool showInfo = true;
   bool isLoading = true;
+  bool isRotating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +77,27 @@ class _ViewerPageState extends State<ViewerPage> {
       child: Container(
         width: viewerWidth,
         height: viewerHeight,
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         child: Stack(
           children: [
-            AspectRatio(
-              aspectRatio: 1.0,
+            Positioned.fill(
               child: Flutter3DViewer(
-                src: r'assets\3d\DamagedHelmet.glb',
+                src: modelUrl,
                 controller: controller,
                 enableTouch: true,
                 progressBarColor: Colors.orange,
-                onLoad: (String modelAddress) =>
-                    setState(() => isLoading = false),
+                onLoad: (String modelAddress) {
+                  setState(() {
+                    isLoading = false;
+                    modelName = extractModelName(modelUrl);
+                  });
+                },
+                onError: (String error) {
+                  setState(() => isLoading = false);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Can not load model: $error')),
+                  );
+                },
               ),
             ),
             Positioned(
@@ -79,20 +107,7 @@ class _ViewerPageState extends State<ViewerPage> {
               child: AnimatedOpacity(
                 opacity: showInfo ? 1 : 0,
                 duration: const Duration(milliseconds: 250),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    "This is the file name",
-                    style: TextStyle(color: Colors.white, fontSize: 13),
-                  ),
-                ),
+                child: Text(modelName),
               ),
             ),
             Center(
@@ -129,21 +144,93 @@ class _ViewerPageState extends State<ViewerPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('3D Viewer'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.people))],
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 6,
+        title: Text(
+          '3D Viewer',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        actionsIconTheme: IconThemeData(
+          color: Theme.of(
+            context,
+          ).colorScheme.onPrimary, // 👈 Cho icon bên phải
+        ),
+
+        actions: [
+          IconButton(
+            onPressed: () async {
+              urlController.text =
+                  "https://modelviewer.dev/shared-assets/models/Horse.glb";
+              await showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Insert model link'),
+                    content: TextField(
+                      controller: urlController,
+                      decoration: const InputDecoration(
+                        hintText: 'https://example.com/model.glb',
+                      ),
+                      keyboardType: TextInputType.url,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          final candidate = urlController.text.trim();
+                          if (!isValidUrl(candidate)) {
+                            // hiện lỗi nhỏ
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'URL không hợp lệ. Cần bắt đầu bằng http/https và kết thúc .glb hoặc .gltf',
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                          // cập nhật modelUrl và bắt đầu load
+                          setState(() {
+                            if (modelUrl != candidate) {
+                              isLoading = true;
+                            }
+                            modelUrl = candidate;
+                            modelName = extractModelName(candidate);
+                            
+                          });
+                          // đóng dialog
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Load'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.link),
+          ),
+        ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: viewer,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Align(
+          alignment: const Alignment(0, -0.8),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
+            clipBehavior: Clip.antiAlias,
+            child: viewer,
           ),
         ),
       ),
@@ -164,6 +251,20 @@ class _ViewerPageState extends State<ViewerPage> {
             },
             tooltip: "Reset View",
             child: Icon(Icons.center_focus_strong),
+          ),
+          const SizedBox(height: 15),
+          FloatingActionButton(
+            heroTag: 'rotate',
+            onPressed: () => setState(() {
+              if (isRotating) {
+                controller.pauseRotation();
+              } else {
+                controller.startRotation();
+              }
+              isRotating = !isRotating;
+            }),
+            tooltip: "Rotate Model",
+            child: Icon(isRotating ? Icons.pause : Icons.play_arrow),
           ),
         ],
       ),
