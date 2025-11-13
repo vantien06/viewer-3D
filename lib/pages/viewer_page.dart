@@ -122,10 +122,7 @@ class _ViewerPageState extends State<ViewerPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        ),
+        automaticallyImplyLeading: false,
         title: const Text(
           '3D Viewer',
           style: TextStyle(
