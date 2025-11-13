@@ -46,6 +46,7 @@ class _ViewerPageState extends State<ViewerPage> {
   String modelName = 'Astronaut.glb';
 
   final TextEditingController urlController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   bool isValidUrl(String url) {
     final low = url.toLowerCase();
@@ -116,7 +117,7 @@ class _ViewerPageState extends State<ViewerPage> {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.black54,
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -143,22 +144,20 @@ class _ViewerPageState extends State<ViewerPage> {
     );
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        elevation: 6,
+        backgroundColor: Colors.white,
         title: Text(
           '3D Viewer',
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 25,
           ),
         ),
         centerTitle: true,
         actionsIconTheme: IconThemeData(
-          color: Theme.of(
-            context,
-          ).colorScheme.onPrimary, // 👈 Cho icon bên phải
+          color: Colors.black, // 👈 Cho icon bên phải
         ),
 
         actions: [
@@ -204,7 +203,6 @@ class _ViewerPageState extends State<ViewerPage> {
                             }
                             modelUrl = candidate;
                             modelName = extractModelName(candidate);
-                            
                           });
                           // đóng dialog
                           Navigator.of(context).pop();
@@ -220,19 +218,52 @@ class _ViewerPageState extends State<ViewerPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Align(
-          alignment: const Alignment(0, -0.8),
-          child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+      body: Column(
+        children: [
+          const SizedBox(height: 12),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              height: 48,
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5F7),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 12),
+                  const Icon(Icons.menu, size: 22, color: Colors.black),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      "Search",
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                  const Icon(Icons.link, size: 20, color: Colors.black),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.search, size: 22, color: Colors.black),
+                  const SizedBox(width: 12),
+                ],
+              ),
             ),
-            clipBehavior: Clip.antiAlias,
-            child: viewer,
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: const Alignment(0, -0.8),
+              child: Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: viewer,
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
