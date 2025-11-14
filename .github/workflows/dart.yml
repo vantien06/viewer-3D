@@ -35,7 +35,8 @@ jobs:
         run: zip -qq -r -9 FlutterIpaExport.ipa Payload
         working-directory: build/ios/iphoneos
 
-      - name: Upload binaries to release
+        # Upload .ipa to release
+      - name: Upload iOS .ipa to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -43,3 +44,12 @@ jobs:
           tag: v1.0.${{ github.run_number }}
           overwrite: true
           body: "Automatic build ${{ github.run_number }}"
+
+        # Upload APK file to the same release, reuse tag
+      - name: Upload Android .apk to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/flutter-apk/app-release.apk
+          tag: v1.0.${{ github.run_number }}
+          overwrite: true
