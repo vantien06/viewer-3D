@@ -48,3 +48,4 @@ app.*.map.json
 **/generated_plugin_registrant.cc
 **/generated_plugins.cmake
 **/GeneratedPluginRegistrant.swift
+# Just a simple comment to test gitignore
