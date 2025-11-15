@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:viewer_3d/utils/news_model.dart';
-import 'package:viewer_3d/utils/category_model.dart';
+import 'package:viewer_3d/models/news_model.dart';
+import 'package:viewer_3d/models/category_model.dart';
 
 class NewsService {
   // Using NewsAPI (requires free API key from https://newsapi.org)
@@ -26,12 +26,22 @@ class NewsService {
     ];
   }
 
-  static Future<List<News>> fetchNews({String? category}) async {
+  static Future<List<News>> fetchNews({
+    String? category,
+    String? searchQuery,
+  }) async {
     try {
       // Using NewsAPI
-      final topic = category?.toLowerCase() ?? 'general';
-      final url =
-          '$baseUrl/top-headlines?category=$topic&country=us&pageSize=10&apiKey=$apiKey';
+      final String url;
+      if (searchQuery != null && searchQuery.isNotEmpty) {
+        // Use everything endpoint for search
+        url = '$baseUrl/everything?q=$searchQuery&pageSize=20&apiKey=$apiKey';
+      } else {
+        // Use top-headlines endpoint for category
+        final topic = category?.toLowerCase() ?? 'general';
+        url =
+            '$baseUrl/top-headlines?category=$topic&country=us&pageSize=10&apiKey=$apiKey';
+      }
 
       print('Fetching news from: $url');
       final response = await http.get(Uri.parse(url));

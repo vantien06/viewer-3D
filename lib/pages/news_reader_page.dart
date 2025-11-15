@@ -26,8 +26,19 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController urlController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
+  bool isSearching = false;
 
   String newsUrl = '';
+
+  @override
+  void dispose() {
+    urlController.dispose();
+    searchController.dispose();
+    searchFocusNode.dispose();
+    super.dispose();
+  }
 
   bool isValidNewsUrl(String url) {
     final low = url.toLowerCase();
@@ -74,12 +85,54 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
                     icon: const Icon(Icons.menu, color: Colors.black),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      "Search",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        searchFocusNode.requestFocus();
+                      },
+                      child: TextField(
+                        controller: searchController,
+                        focusNode: searchFocusNode,
+                        decoration: const InputDecoration(
+                          hintText: 'Search',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                        onSubmitted: (value) {
+                          if (value.trim().isNotEmpty) {
+                            setState(() {
+                              isSearching = true;
+                            });
+                            final provider = Provider.of<NewsProvider>(
+                              context,
+                              listen: false,
+                            );
+                            provider.fetchNews(searchQuery: value.trim());
+                            searchFocusNode.unfocus();
+                          }
+                        },
+                      ),
                     ),
                   ),
+                  if (isSearching)
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isSearching = false;
+                          searchController.clear();
+                        });
+                        final provider = Provider.of<NewsProvider>(
+                          context,
+                          listen: false,
+                        );
+                        provider.fetchNews();
+                      },
+                      icon: const Icon(Icons.close, color: Colors.black),
+                    ),
                   IconButton(
                     onPressed: () async {
                       urlController.text = "";
@@ -133,7 +186,16 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
                     icon: const Icon(Icons.link),
                   ),
                   const SizedBox(width: 12),
-                  const Icon(Icons.search, size: 22, color: Colors.black),
+                  GestureDetector(
+                    onTap: () {
+                      searchFocusNode.requestFocus();
+                    },
+                    child: const Icon(
+                      Icons.search,
+                      size: 22,
+                      color: Colors.black,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                 ],
               ),
@@ -191,8 +253,8 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
                   return const Center(child: Text('No news available'));
                 }
 
-                // Show vertical list when a specific category is selected
-                if (newsProvider.selectedCategory != null) {
+                // Show vertical list when searching or a specific category is selected
+                if (isSearching || newsProvider.selectedCategory != null) {
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: newsProvider.newsList.length,

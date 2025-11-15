@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:viewer_3d/providers/news_provider.dart';
-import 'package:viewer_3d/utils/news_model.dart';
+import 'package:viewer_3d/models/news_model.dart';
 import '../widgets/app_drawer.dart';
 
 class NewsDetailPage extends StatelessWidget {
