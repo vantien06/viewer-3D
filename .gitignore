@@ -45,4 +45,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+**/generated_plugin_registrant.cc
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.swift
 # Just a simple comment to test gitignore

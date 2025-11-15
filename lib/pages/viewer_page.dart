@@ -132,7 +132,7 @@ class _ViewerPageState extends State<ViewerPage> {
           ),
         ),
         centerTitle: true,
-      ),
+        ),
       body: Column(
         children: [
           const SizedBox(height: 12),
@@ -149,7 +149,7 @@ class _ViewerPageState extends State<ViewerPage> {
                   const SizedBox(width: 12),
                   IconButton(
                     onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                    icon: const Icon(Icons.menu),
+                    icon: const Icon(Icons.menu, color: Colors.black),
                   ),
                   const SizedBox(width: 12),
                   const Expanded(
@@ -204,7 +204,7 @@ class _ViewerPageState extends State<ViewerPage> {
                                   });
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Load'),
+                                child: const Text('Insert'),
                               ),
                             ],
                           );

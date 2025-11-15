@@ -46,6 +46,16 @@ class AppDrawer extends StatelessWidget {
               selected: currentRoute == NewsReaderPage.routeName,
               onTap: () => _go(context, NewsReaderPage.routeName),
             ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                ),
+              ),
+            ),
           ],
         ),
       ),
