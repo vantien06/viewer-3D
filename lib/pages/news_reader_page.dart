@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:viewer_3d/providers/news_provider.dart';
 import '../widgets/app_drawer.dart';
 import 'news_detail_page.dart';
+import 'about_us_page.dart';
 
 class NewsReaderPage extends StatefulWidget {
   static const String routeName = '/news';
@@ -52,19 +53,51 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
       drawer: const AppDrawer(currentRoute: NewsReaderPage.routeName),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF4DD0E1), // Cyan
+                Color(0xFF26C6DA), // Cyan darker
+              ],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+            ),
+          ),
+        ),
         title: const Text(
           'News Reader',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 25,
+            fontSize: 22,
           ),
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AboutUsPage.routeName);
+            },
+            child: const Text(
+              'About us',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
