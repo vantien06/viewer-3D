@@ -31,41 +31,43 @@ class _MainPageState extends State<MainPage> {
           _YoutubeStreamContent(key: const PageStorageKey('youtube')),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(
-                  index: 0,
-                  icon: Icons.article_outlined,
-                  selectedIcon: Icons.article,
-                ),
-                _buildNavItem(
-                  index: 1,
-                  icon: Icons.view_in_ar_outlined,
-                  selectedIcon: Icons.view_in_ar,
-                  isCenter: true,
-                ),
-                _buildNavItem(
-                  index: 2,
-                  icon: Icons.play_circle_outline,
-                  selectedIcon: Icons.play_circle,
-                ),
-              ],
-            ),
+      extendBody: true,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 20,
+                spreadRadius: 0,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(
+                index: 0,
+                icon: Icons.article_outlined,
+                selectedIcon: Icons.article,
+              ),
+              _buildNavItem(
+                index: 1,
+                icon: Icons.view_in_ar_outlined,
+                selectedIcon: Icons.view_in_ar,
+                isCenter: true,
+              ),
+              _buildNavItem(
+                index: 2,
+                icon: Icons.play_circle_outline,
+                selectedIcon: Icons.play_circle,
+              ),
+            ],
           ),
         ),
       ),
@@ -82,25 +84,30 @@ class _MainPageState extends State<MainPage> {
     
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(
-          horizontal: isCenter ? 20 : 16,
-          vertical: 8,
-        ),
-        decoration: BoxDecoration(
-          color: isSelected && isCenter
-              ? const Color(0xFF26C6DA).withOpacity(0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Icon(
-          isSelected ? selectedIcon : icon,
-          size: isCenter ? 32 : 26,
-          color: isSelected
-              ? const Color(0xFF26C6DA)
-              : Colors.grey.shade400,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isSelected ? selectedIcon : icon,
+            size: isCenter ? 32 : 26,
+            color: isSelected
+                ? const Color(0xFF26C6DA)
+                : Colors.grey.shade400,
+          ),
+          const SizedBox(height: 6),
+          // Indicator dot
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected
+                  ? const Color(0xFF26C6DA)
+                  : Colors.transparent,
+            ),
+          ),
+        ],
       ),
     );
   }
