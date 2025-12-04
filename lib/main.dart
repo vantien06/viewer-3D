@@ -6,6 +6,7 @@ import 'pages/news_reader_page.dart';
 import 'pages/about_us_page.dart';
 import 'pages/splash_page.dart';
 import 'pages/main_page.dart';
+import 'pages/ai_scanner_page.dart';
 import 'providers/news_provider.dart';
 import 'providers/youtube_provider.dart';
 
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           YoutubeStreamPage.routeName: (context) => const YoutubeStreamPage(),
           NewsReaderPage.routeName: (context) => const NewsReaderPage(),
           AboutUsPage.routeName: (context) => const AboutUsPage(),
+          AIScannerPage.routeName: (context) => const AIScannerPage(),
         },
         builder: (context, child) {
           return Stack(

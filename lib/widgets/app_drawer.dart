@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/viewer_page.dart';
 import '../pages/youtube_stream_page.dart';
 import '../pages/news_reader_page.dart';
+import '../pages/ai_scanner_page.dart';
 
 class AppDrawer extends StatelessWidget {
   final String currentRoute;
@@ -33,6 +34,13 @@ class AppDrawer extends StatelessWidget {
               title: const Text('3D Viewer'),
               selected: currentRoute == ViewerPage.routeName,
               onTap: () => _go(context, ViewerPage.routeName),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('AI Scanner'),
+              subtitle: const Text('Quét vật thể để xem 3D'),
+              selected: currentRoute == AIScannerPage.routeName,
+              onTap: () => _go(context, AIScannerPage.routeName),
             ),
             ListTile(
               leading: const Icon(Icons.live_tv),

@@ -41,6 +41,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_3d_controller: ^2.3.0
+  
+  # AI Object Recognition
+  google_mlkit_image_labeling: ^0.14.1
+  image_picker: ^1.2.1
+  camera: ^0.11.3
 
 dev_dependencies:
   flutter_test:

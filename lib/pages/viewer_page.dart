@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import '../widgets/app_drawer.dart';
 import 'about_us_page.dart';
+import 'ai_scanner_page.dart';
 
 class ViewerPage extends StatefulWidget {
   static const String routeName = '/viewer';
@@ -22,6 +23,20 @@ class _ViewerPageState extends State<ViewerPage> {
 
   final TextEditingController urlController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Nhận model URL từ AI Scanner nếu có
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is String && args.isNotEmpty && args != modelUrl) {
+      setState(() {
+        modelUrl = args;
+        modelName = extractModelName(args);
+        isLoading = true;
+      });
+    }
+  }
 
   bool isValidUrl(String url) {
     final low = url.toLowerCase();
@@ -274,6 +289,16 @@ class _ViewerPageState extends State<ViewerPage> {
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          FloatingActionButton(
+            heroTag: 'aiScanner',
+            onPressed: () {
+              Navigator.pushNamed(context, AIScannerPage.routeName);
+            },
+            tooltip: "AI Scanner",
+            backgroundColor: const Color(0xFF26C6DA),
+            child: const Icon(Icons.camera_alt, color: Colors.white),
+          ),
+          const SizedBox(height: 15),
           FloatingActionButton(
             heroTag: 'toggleInfo',
             onPressed: () => setState(() => showInfo = !showInfo),
