@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import '../widgets/app_drawer.dart';
+import 'about_us_page.dart';
 
 class ViewerPage extends StatefulWidget {
   static const String routeName = '/viewer';
@@ -121,18 +122,52 @@ class _ViewerPageState extends State<ViewerPage> {
       drawer: const AppDrawer(currentRoute: ViewerPage.routeName),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF4DD0E1), // Cyan
+                Color(0xFF26C6DA), // Cyan darker
+              ],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+            ),
+          ),
+        ),
         title: const Text(
           '3D Viewer',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 25,
+            fontSize: 22,
           ),
         ),
         centerTitle: true,
-        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AboutUsPage.routeName);
+            },
+            child: const Text(
+              'About us',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: Column(
         children: [
           const SizedBox(height: 12),
